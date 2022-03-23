@@ -1,4 +1,4 @@
-package com.example.collageezy
+package com.collageezy.app
 
 import io.flutter.embedding.android.FlutterActivity
 
