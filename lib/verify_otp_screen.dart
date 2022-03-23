@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'dart:developer';
 
@@ -9,6 +9,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
@@ -173,44 +174,32 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
 
   @override
   Widget build(BuildContext context) {
-    var windowWidth = MediaQuery.of(context).size.width;
-    var windowHeight = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: _isLoading
           ? Center(
               child: SpinKitFadingCircle(
               color: theme.colorPrimary,
             ))
-          : Stack(
-              children: [
-                // IBackground4(
-                //     width: windowWidth, colorsGradient: theme.colorsGradient),
-
-                //  IAppBar(context: context, text: "", color: Colors.white),
-
-                Center(
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(20, 0, 20, windowHeight * 0.1),
-                    width: windowWidth,
-                    child: _body(),
-                  ),
-                ),
-              ],
+          : Container(
+              child: _body(width, height),
             ),
     );
   }
 
-  _body() {
+  _body(double width, double height) {
     return ListView(
       shrinkWrap: true,
       children: <Widget>[
+        SizedBox(
+          height: height * .22,
+        ),
         Container(
           margin: EdgeInsets.only(left: 15, right: 20),
           alignment: Alignment.centerLeft,
-          child: Text(
-            "Verify phone number", // "Verify phone number"
-            // style: theme.text20boldWhite.copyWith(color: Colors.red)
-          ),
+          child: Text("Verify phone number", // "Verify phone number"
+              style: GoogleFonts.openSans(fontSize: 20)),
         ),
         const SizedBox(
           height: 20,
@@ -236,7 +225,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                 child: Pinput(
                   focusNode: _pinPutFocusNode,
                   controller: _pinEditingController,
-                  onSubmitted: (val) {},
+                  onSubmitted: (val) {
+                    _onFormSubmitted();
+                  },
                   length: 6,
 
                   // fieldsCount: 6,
@@ -263,13 +254,26 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
                 height: 45,
               ),
               Container(
-                margin: EdgeInsets.only(left: 20, right: 20),
-                child: RaisedButton(
-                  onPressed: _pressContinueButton,
-                  child: Text("CONTINUE"), // CONTINUE
-                  color: Colors.red,
-                ),
-              ),
+                  height: height * .07,
+                  width: width * .7,
+                  child: RaisedButton(
+                      elevation: 0,
+                      disabledColor: theme.colorPrimary.withOpacity(0.6),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      color: theme.colorPrimary,
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        _onFormSubmitted();
+                      },
+                      child: Text(("Continue"),
+                          style: GoogleFonts.workSans(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700)
+                          // : theme.text18Bold
+                          //     .copyWith(fontWeight: FontWeight.w400),
+                          ))),
               SizedBox(
                 height: 25,
               ),

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, avoid_unnecessary_containers, deprecated_member_use
 
 import 'package:collageezy/verify_otp_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -29,16 +29,8 @@ class _LoginPhoneScreenState extends State<LoginPhoneScreen> {
 
     return Scaffold(
       // backgroundColor: theme.colorBackground,
-      body: Stack(
-        children: [
-          Center(
-            child: Container(
-              margin: EdgeInsets.fromLTRB(20, 0, 20, windowHeight * 0.1),
-              width: windowWidth,
-              child: _body(windowWidth, windowHeight),
-            ),
-          ),
-        ],
+      body: Container(
+        child: _body(windowWidth, windowHeight),
       ),
     );
   }
@@ -59,12 +51,17 @@ class _LoginPhoneScreenState extends State<LoginPhoneScreen> {
     );
   }
 
+  bool getOtpButtonActive = false;
+
   _body(double height, double width) {
     return Form(
       key: _formLog,
       child: ListView(
         shrinkWrap: true,
         children: <Widget>[
+          SizedBox(
+            height: height * .25,
+          ),
           Center(
             child: Text("Welcome to", // "Let's start with LogIn!"
                 style: GoogleFonts.openSans(
@@ -76,16 +73,26 @@ class _LoginPhoneScreenState extends State<LoginPhoneScreen> {
             height: height * .03,
           ),
           Container(
-            height: height * .15,
-            width: width * .5,
+            height: height * .18,
+            width: width * .6,
             child: Image.asset('assets/logo.png', fit: BoxFit.contain),
+          ),
+          SizedBox(
+            height: height * .04,
+          ),
+          Center(
+            child: Text("Sign in", // "Let's start with LogIn!"
+                style: GoogleFonts.openSans(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey,
+                    fontSize: 20)),
           ),
           Container(
             // color: theme.colorBackgroundDialog,
             child: Column(
               children: <Widget>[
                 SizedBox(
-                  height: 15,
+                  height: height * .2,
                 ),
                 Container(
                   margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -96,48 +103,62 @@ class _LoginPhoneScreenState extends State<LoginPhoneScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: TextFormField(
-                    onSaved: (value) {
-                      phone = value;
-                    },
-                    keyboardType: TextInputType.phone,
-                    textAlignVertical: TextAlignVertical.center,
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
-                    // ignore: unnecessary_new
-                    decoration: new InputDecoration(
-                      prefix: Text("+91  "),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
-                      ),
-                      hintText: "Enter your Phone Number",
-                      hintStyle: TextStyle(color: Colors.red, fontSize: 12.0),
-                    ),
-                    validator: (value) {
-                      if (value == null) {
-                        return "Enter in field";
-                      }
-                      if (value.length != 10) {
-                        return "Enter correct phone";
-                      }
-                      return null;
-                    },
-                  ),
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'mobile no required';
+                        } else if (int.tryParse(val.toString()) == null) {
+                          return 'invalid mobile no';
+                        } else {
+                          phone = val.trim();
+                          return null;
+                        }
+                      },
+                      onChanged: (value) {
+                        if (value.length == 10) {
+                          setState(() {
+                            getOtpButtonActive = true;
+                          });
+                        } else if (value.length != 10) {
+                          setState(() {
+                            getOtpButtonActive = false;
+                          });
+                        }
+                      },
+                      maxLength: 10,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.phone_android),
+                          hintText: ('Phone Number'))),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 20, right: 20),
-                  child: RaisedButton(
-                    onPressed: _pressLoginButton,
-                    child: Text("Get OTP"), // LOGIN
-                    color: Colors.red,
-                    // textStyle: theme.text16boldWhite,
-                  ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: width * .06, vertical: height * .1),
+                  child: Container(
+                      width: width * .4,
+                      height: height * .14,
+                      child: RaisedButton(
+                          elevation: 0,
+                          disabledColor: theme.colorPrimary.withOpacity(0.6),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          color: theme.colorPrimary,
+                          onPressed: getOtpButtonActive
+                              ? () {
+                                  FocusScope.of(context).unfocus();
+                                  _pressLoginButton();
+                                }
+                              : null,
+                          child: Text(("Get OTP"),
+                              style: GoogleFonts.workSans(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700)
+                              // : theme.text18Bold
+                              //     .copyWith(fontWeight: FontWeight.w400),
+                              ))),
                 ),
                 SizedBox(
                   height: 15,
