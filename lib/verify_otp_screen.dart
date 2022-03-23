@@ -96,7 +96,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
     // ignore: prefer_function_declarations_over_variables
     final PhoneVerificationCompleted verificationCompleted =
         (AuthCredential phoneAuthCredential) {
-      log("xxxxx" + phoneAuthCredential.token.toString());
+      // log("xxxxx" + phoneAuthCredential.token.toString());
       _firebaseAuth
           .signInWithCredential(phoneAuthCredential)
           .then((UserCredential value) async {
@@ -111,7 +111,6 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
               .update({
             'uid': value.user!.uid,
             "phone": value.user!.phoneNumber,
-            "isPhone": true,
           });
           setState(() {
             _isLoading = false;

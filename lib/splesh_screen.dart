@@ -17,11 +17,12 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool isRegistered = false;
+  // bool isRegistered = false;
 
   getUser() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user?.uid != null) {
+      print(user?.uid);
       final data = await FirebaseDatabase.instance
           .ref()
           .child('User Information')
@@ -29,13 +30,14 @@ class _SplashScreenState extends State<SplashScreen> {
           .once();
 
       final userData = data.snapshot.value as Map;
-      // log(userData['isProfileCompleted'].hashCode.toString());
-      if (!(userData['isProfileCompleted'].hashCode == 2011)) {
+
+      if ((userData['isProfileCompleted'] != null)) {
         Future.delayed(const Duration(seconds: 5)).then((value) {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
         });
       } else {
+        print('xx');
         Future.delayed(const Duration(seconds: 5)).then((value) => {
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (ctx) => const RegisterScreen1()))

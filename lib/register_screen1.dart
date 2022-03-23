@@ -6,7 +6,7 @@ class RegisterScreen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Text("Register Screen 1"),
+      body: Center(child: Text("Register Screen 1")),
     );
   }
 }

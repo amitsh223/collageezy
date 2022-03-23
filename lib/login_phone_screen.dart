@@ -1,8 +1,8 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:collageezy/verify_otp_screen.dart';
 import 'package:firebase_database/firebase_database.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -35,7 +35,7 @@ class _LoginPhoneScreenState extends State<LoginPhoneScreen> {
             child: Container(
               margin: EdgeInsets.fromLTRB(20, 0, 20, windowHeight * 0.1),
               width: windowWidth,
-              child: _body(),
+              child: _body(windowWidth, windowHeight),
             ),
           ),
         ],
@@ -59,22 +59,26 @@ class _LoginPhoneScreenState extends State<LoginPhoneScreen> {
     );
   }
 
-  _body() {
+  _body(double height, double width) {
     return Form(
       key: _formLog,
       child: ListView(
         shrinkWrap: true,
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(left: 15, right: 20),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Let's start with LogIn", // "Let's start with LogIn!"
-              // style: theme.text20boldWhite.copyWith(color: Colors.red)
-            ),
+          Center(
+            child: Text("Welcome to", // "Let's start with LogIn!"
+                style: GoogleFonts.openSans(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey,
+                    fontSize: 24)),
           ),
           SizedBox(
-            height: 20,
+            height: height * .03,
+          ),
+          Container(
+            height: height * .15,
+            width: width * .5,
+            child: Image.asset('assets/logo.png', fit: BoxFit.contain),
           ),
           Container(
             // color: theme.colorBackgroundDialog,
