@@ -51,6 +51,7 @@ dependencies:
   firebase_core: 
   firebase_auth:
   flutter_spinkit:
+  aadhaar_offline_ekyc: ^0.0.1
 
 dev_dependencies:
   flutter_test:

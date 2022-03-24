@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:collageezy/home_screen.dart';
 import 'package:collageezy/login_screen.dart';
+import 'package:collageezy/profile_screen.dart';
 import 'package:collageezy/register_screen1.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -37,11 +38,11 @@ class _SplashScreenState extends State<SplashScreen> {
               .push(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
         });
       } else {
-        print('xx');
-        Future.delayed(const Duration(seconds: 5)).then((value) => {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (ctx) => const RegisterScreen1()))
-            });
+        
+        Future.delayed(const Duration(seconds: 5)).then((value) {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => const RegisterScreen1()));
+        });
       }
     } else {
       Future.delayed(const Duration(seconds: 5)).then((value) => {
