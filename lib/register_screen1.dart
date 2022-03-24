@@ -1,8 +1,17 @@
+// ignore_for_file: prefer_const_constructors, unnecessary_string_interpolations
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:collageezy/constants.dart';
+import 'package:collageezy/main.dart';
 import 'package:collageezy/register_screen2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +36,7 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
   XFile? _image;
   String? universityRollNo;
   File? crop_image;
+
   ImagePicker picker = ImagePicker();
   final _formkey = GlobalKey<FormState>();
 
@@ -98,7 +108,7 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
   //     });
   // }
   // }
-
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -111,15 +121,48 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formkey.currentState!.validate() &&
                       dob != null &&
                       _image != null) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                RegisterScreen2()));
+                    setState(() {
+                      isLoading = true;
+                    });
+                    final userId = FirebaseAuth.instance.currentUser!.uid;
+                    final ref = FirebaseStorage.instance
+                        .ref()
+                        .child("CustomerDP")
+                        .child("$userId")
+                        .child("CustomerDP" + ".jpg");
+                    await ref.putFile(File(_image!.path));
+                    final vals = await ref.getDownloadURL();
+
+                    FirebaseDatabase.instance
+                        .ref()
+                        .child('User Information')
+                        .child(userId)
+                        .update({
+                      "imageUrl": vals,
+                      "name": name,
+                      "dob": dob!.toIso8601String(),
+                      "gender": gender,
+                      "state": state,
+                      "city": city
+                    }).then((value) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  RegisterScreen2()));
+                    }).catchError((e) {
+                      Fluttertoast.showToast(msg: e.toString());
+                      setState(() {
+                        isLoading = false;
+                      });
+                    });
                   } else if (_formkey.currentState!.validate() && dob == null) {
                     Fluttertoast.showToast(msg: "Please select date of birth");
                   } else if (_formkey.currentState!.validate() &&
@@ -129,11 +172,25 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
                   }
                 },
                 style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(theme.colorPrimary),
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)))),
-                child: const Text(
-                  "Next",
-                  style: TextStyle(fontSize: 18),
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: isLoading
+                      ? SizedBox(
+                          height: height * .04,
+                          child: SpinKitThreeBounce(
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          "Next",
+                          style: GoogleFonts.openSans(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
                 )),
           ),
           body: SafeArea(
@@ -146,26 +203,16 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          height: height * 0.1,
+                          height: height * 0.05,
                         ),
                         Stack(
                           children: [
-                            ClipOval(
-                              child: _image != null
-                                  ? Image.file(
-                                      File(
-                                        _image!.path,
-                                      ),
-                                      width: 130,
-                                      height: 130,
-                                      fit: BoxFit.fill,
-                                    )
-                                  : Image.asset(
-                                      "assets/user_avatar.png",
-                                      width: 130,
-                                      height: 130,
-                                      fit: BoxFit.fill,
-                                    ),
+                            CircleAvatar(
+                              radius: width * .2,
+                              backgroundImage: _image != null
+                                  ? FileImage(File(_image!.path))
+                                      as ImageProvider
+                                  : AssetImage("assets/user_avatar.png"),
                             ),
                             Positioned(
                                 bottom: _image != null ? 1 : 2,
@@ -177,7 +224,7 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
                                   child: CircleAvatar(
                                     child: Icon(Icons.edit_outlined),
                                   ),
-                                ))
+                                )),
                           ],
                         ),
                         const SizedBox(
