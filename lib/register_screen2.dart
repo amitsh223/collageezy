@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 import 'dart:io';
 
@@ -18,6 +20,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
   String? percent10th;
   String? percent12th;
   String? nameOfClg;
+  // ignore: non_constant_identifier_names
   XFile? _10thMarksheetImage;
   XFile? _12thMarksheetImage;
 
