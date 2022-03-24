@@ -9,7 +9,11 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  String? name;
+  String? name = "Mahesh Kumar";
+  String? contact = "9876543210";
+  String? enrollmentNo = "19EJCCS023";
+  String? collegeName = "Jaipur Engineering College And Research Center";
+  String? adhaarNo = "123412341234";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,63 +33,88 @@ class _EditProfileState extends State<EditProfile> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          children: [
-            Center(
-              child: ClipOval(
-                child: Image.asset(
-                  "assets/user_avatar.png",
-                  width: 130,
-                  height: 130,
-                  fit: BoxFit.fill,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              Center(
+                child: ClipOval(
+                  child: Image.asset(
+                    "assets/user_avatar.png",
+                    width: 130,
+                    height: 130,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Name",
-                  style: GoogleFonts.roboto(color: Colors.grey),
-                )),
-            TextField(
-              
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Contact",
-                  style: GoogleFonts.roboto(color: Colors.grey),
-                )),
-            TextField(),
-            SizedBox(
-              height: 20,
-            ),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Enrollment No",
-                  style: GoogleFonts.roboto(color: Colors.grey),
-                )),
-            TextField(),
-            SizedBox(
-              height: 20,
-            ),
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "College Name",
-                  style: GoogleFonts.roboto(color: Colors.grey),
-                )),
-            TextField()
-          ],
+              SizedBox(
+                height: 30,
+              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Name",
+                    style: GoogleFonts.roboto(color: Colors.grey),
+                  )),
+              TextFormField(
+                enabled: false,
+                initialValue: name,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Contact",
+                    style: GoogleFonts.roboto(color: Colors.grey),
+                  )),
+              TextFormField(
+                enabled: false,
+                initialValue: contact,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Enrollment No",
+                    style: GoogleFonts.roboto(color: Colors.grey),
+                  )),
+              TextFormField(
+                enabled: false,
+                initialValue: enrollmentNo,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "College Name",
+                    style: GoogleFonts.roboto(color: Colors.grey),
+                  )),
+              TextFormField(
+                enabled: false,
+                initialValue: collegeName,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Adhaar Number",
+                    style: GoogleFonts.roboto(color: Colors.grey),
+                  )),
+              TextFormField(
+                enabled: false,
+                initialValue: adhaarNo,
+              ),
+            ],
+          ),
         ),
       ),
     );
