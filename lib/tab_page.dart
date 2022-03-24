@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:collageezy/homeScreen.dart';
 import 'package:collageezy/profile_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
@@ -98,11 +99,13 @@ class _TabPageState extends State<TabPage> {
         body: AnimatedSwitcher(
           duration: Duration(milliseconds: 800),
           child: selectedIndex != 3
-              ? AnimatedContainer(
-                  duration: Duration(milliseconds: 800),
-                  color: colors[selectedIndex],
-                  child: Center(child: Text("Hello")),
-                )
+              ? selectedIndex == 0
+                  ? HomeScreen()
+                  : AnimatedContainer(
+                      duration: Duration(milliseconds: 800),
+                      color: colors[selectedIndex],
+                      child: Center(child: Text("Hello")),
+                    )
               : ProfileMenu(),
         ));
   }

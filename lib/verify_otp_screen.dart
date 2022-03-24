@@ -2,7 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:collageezy/home_screen.dart';
+import 'package:collageezy/homeScreen.dart';
 import 'package:collageezy/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';

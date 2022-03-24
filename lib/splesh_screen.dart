@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:collageezy/home_screen.dart';
+import 'package:collageezy/homeScreen.dart';
 import 'package:collageezy/login_screen.dart';
 import 'package:collageezy/profile_menu.dart';
 import 'package:collageezy/register_screen1.dart';
