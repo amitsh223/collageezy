@@ -53,6 +53,8 @@ dependencies:
   firebase_auth:
   flutter_spinkit:
   aadhaar_offline_ekyc: ^0.0.1
+  google_nav_bar: ^5.0.6
+  line_icons: 
 
 dev_dependencies:
   flutter_test:

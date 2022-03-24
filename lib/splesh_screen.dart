@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:collageezy/home_screen.dart';
 import 'package:collageezy/login_screen.dart';
-import 'package:collageezy/profile_screen.dart';
+import 'package:collageezy/profile_menu.dart';
 import 'package:collageezy/register_screen1.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
