@@ -34,20 +34,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
       if ((userData['isProfileCompleted'] != null)) {
         Future.delayed(const Duration(seconds: 5)).then((value) {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (ctx) => const HomeScreen()));
         });
       } else {
-        
         Future.delayed(const Duration(seconds: 5)).then((value) {
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (ctx) => const RegisterScreen1()));
         });
       }
     } else {
       Future.delayed(const Duration(seconds: 5)).then((value) => {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (ctx) => const LoginScreen()))
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (ctx) => const LoginScreen()))
           });
     }
   }

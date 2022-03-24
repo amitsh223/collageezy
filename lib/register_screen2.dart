@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:collageezy/home_screen.dart';
+import 'package:collageezy/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -82,6 +86,8 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
     // _cropImage();
   }
 
+  String? rollNo;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -94,14 +100,54 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_formkey.currentState!.validate() &&
                     _10thMarksheetImage != null &&
                     _12thMarksheetImage != null) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext ctx) => HomeScreen()));
+                  setState(() {
+                    isLoading = true;
+                  });
+                  final uid = FirebaseAuth.instance.currentUser!.uid;
+                  final ref = FirebaseStorage.instance
+                      .ref()
+                      .child("CustomerDP")
+                      .child(uid)
+                      .child("12Marksheet" ".jpg");
+                  await ref.putFile(File(_12thMarksheetImage!.path));
+                  final image12 = await ref.getDownloadURL();
+                  final ref2 = FirebaseStorage.instance
+                      .ref()
+                      .child("CustomerDP")
+                      .child(uid)
+                      .child("10Marksheet" ".jpg");
+                  await ref2.putFile(File(_10thMarksheetImage!.path));
+                  final image10 = await ref.getDownloadURL();
+                  FirebaseDatabase.instance
+                      .ref()
+                      .child("User Information")
+                      .child(uid)
+                      .update({
+                    "12Marks": percent12th,
+                    "10Marks": percent10th,
+                    "10Marksheet": image10,
+                    "12MarkSheet": image12,
+                    "nameOfCollege": nameOfClg,
+                    "rollNo": rollNo,
+                    "isProfileCompleted": true
+                  }).then((value) {
+                    setState(() {
+                      isLoading = false;
+                    });
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext ctx) => HomeScreen()));
+                  }).catchError((e) {
+                    setState(() {
+                      isLoading = false;
+                    });
+                    Fluttertoast.showToast(msg: e.toString());
+                  });
                 } else if (_formkey.currentState!.validate() &&
                     (_10thMarksheetImage == null ||
                         _12thMarksheetImage == null)) {
@@ -109,12 +155,22 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                 }
               },
               style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(theme.colorPrimary),
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)))),
-              child: const Text(
-                "Submit",
-                style: TextStyle(fontSize: 18),
-              )),
+              child: isLoading
+                  ? SizedBox(
+                      height: height * .04,
+                      child: SpinKitThreeBounce(
+                        size: 20,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      "Submit",
+                      style: TextStyle(fontSize: 18),
+                    )),
         ),
         body: SingleChildScrollView(
             child: Padding(
@@ -124,7 +180,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: height * 0.1,
+                    height: height * 0.06,
                   ),
                   Text("Upload 10th Marksheet"),
                   const SizedBox(
@@ -250,6 +306,26 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         hintText: 'Name of College/Unversity',
                         labelText: 'Name of College/Unversity',
+                        border: OutlineInputBorder()),
+                    obscureText: false,
+                  ),
+                  SizedBox(
+                    height: height * .02,
+                  ),
+                  TextFormField(
+                    textCapitalization: TextCapitalization.characters,
+                    validator: (val) {
+                      if (val!.isEmpty) {
+                        return "required";
+                      } else {
+                        rollNo = val;
+                        return null;
+                      }
+                    },
+                    decoration: const InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        hintText: 'Roll no of College/Unversity',
+                        labelText: 'Roll no of College/Unversity',
                         border: OutlineInputBorder()),
                     obscureText: false,
                   ),
