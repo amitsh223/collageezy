@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 import 'dart:developer';
 import 'dart:io';
-import 'package:collageezy/homeScreen.dart';
+
+
+
 import 'package:collageezy/main.dart';
+import 'package:collageezy/tab_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -141,7 +144,7 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext ctx) => HomeScreen()));
+                            builder: (BuildContext ctx) => TabPage()));
                   }).catchError((e) {
                     setState(() {
                       isLoading = false;

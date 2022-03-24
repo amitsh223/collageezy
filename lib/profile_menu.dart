@@ -1,14 +1,19 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:collageezy/login_screen.dart';
+import 'package:collageezy/models/user_model.dart';
 import 'package:collageezy/my_account.dart';
+import 'package:collageezy/providers/user_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:aadhaar_offline_ekyc/aadhaar_offline_ekyc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 class ProfileMenu extends StatefulWidget {
   const ProfileMenu({Key? key}) : super(key: key);
@@ -18,7 +23,15 @@ class ProfileMenu extends StatefulWidget {
 }
 
 class _ProfileMenuState extends State<ProfileMenu> {
-  bool is_KYC_completed = true;
+  bool is_KYC_completed = false;
+  UserInformation user = UserInformation();
+  getData() {
+    user = Provider.of<UserProvider>(context, listen: false).userInfo;
+    if (user.isAdhaarVerified!) {
+      is_KYC_completed = true;
+    }
+  }
+
   XFile? _image;
   void _showPicker(context) {
     showModalBottomSheet(
@@ -70,27 +83,11 @@ class _ProfileMenuState extends State<ProfileMenu> {
     // _cropImage();
   }
 
-  offileneAdhaar() {
-    return OfflineAadhaarSdk(
-      baseUrl: 'https://pre-production.deepvue.tech/v1',
-      clientId: 'Smart India Hack(Amit)',
-      clientSecret:
-          '6f0ee1005c149e881e5cf1498463f47fe9e6c40feac449e1a99fd4f45f71b671',
-      useFaceMatch: false,
-      imageUrl:
-          "https://upload.wikimedia.org/wikipedia/en/thumb/c/cf/Aadhaar_Logo.svg/375px-Aadhaar_Logo.svg.png",
-      failureCallback: (int failureCode) {},
-      successCallback: (String response) {
-        log(response.toString());
-      },
-    );
-  }
-
-  void startSdk(BuildContext context, OfflineAadhaarSdk aadhaarSdk) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => aadhaarSdk),
-    );
+ 
+  @override
+  void initState() {
+    getData();
+    super.initState();
   }
 
   @override
@@ -114,39 +111,26 @@ class _ProfileMenuState extends State<ProfileMenu> {
             SizedBox(
               height: height * 0.02,
             ),
-            Center(
-              child: Stack(
-                children: [
-                  ClipOval(
-                    child: _image != null
-                        ? Image.file(
-                            File(
-                              _image!.path,
-                            ),
-                            width: 130,
-                            height: 130,
-                            fit: BoxFit.fill,
-                          )
-                        : Image.asset(
-                            "assets/user_avatar.png",
-                            width: 130,
-                            height: 130,
-                            fit: BoxFit.fill,
-                          ),
-                  ),
-                  Positioned(
-                      bottom: _image != null ? 1 : 2,
-                      right: _image != null ? 3 : 10,
-                      child: InkWell(
-                        onTap: () {
-                          _showPicker(context);
-                        },
-                        child: CircleAvatar(
-                          child: Icon(Icons.edit_outlined),
-                        ),
-                      ))
-                ],
-              ),
+            Stack(
+              children: [
+                CircleAvatar(
+                  radius: width * .2,
+                  backgroundImage: _image != null
+                      ? FileImage(File(_image!.path)) as ImageProvider
+                      : NetworkImage(user.imageUrl!),
+                ),
+                Positioned(
+                    bottom: _image != null ? 1 : 2,
+                    right: _image != null ? 3 : 10,
+                    child: InkWell(
+                      onTap: () {
+                        _showPicker(context);
+                      },
+                      child: CircleAvatar(
+                        child: Icon(Icons.edit_outlined),
+                      ),
+                    )),
+              ],
             ),
             const SizedBox(
               height: 20,
@@ -156,7 +140,8 @@ class _ProfileMenuState extends State<ProfileMenu> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext ctx) => MyAccount()));
+                        builder: (BuildContext ctx) =>
+                            MyAccount(is_KYC_completed)));
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
@@ -242,7 +227,13 @@ class _ProfileMenuState extends State<ProfileMenu> {
               height: 20,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                FirebaseAuth.instance.signOut().then((value) {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (ctx) => LoginScreen()));
+                });
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 color: Color(0xffF5F6FA),
@@ -256,12 +247,12 @@ class _ProfileMenuState extends State<ProfileMenu> {
                 ),
               ),
             ),
-            RaisedButton(
-              onPressed: () {
-                startSdk(context, offileneAdhaar());
-              },
-              child: Text('Verify Adhaar'),
-            )
+            // RaisedButton(
+            //   onPressed: () {
+            //     startSdk(context, offileneAdhaar());
+            //   },
+            //   child: Text('Verify Adhaar'),
+            // )
           ],
         ),
       ),

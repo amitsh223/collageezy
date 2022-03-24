@@ -1,12 +1,22 @@
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors
+
+import 'dart:developer';
+
+import 'package:aadhaar_offline_ekyc/offline_aadhaar_sdk.dart';
 import 'package:collageezy/editProfile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
 
 class MyAccount extends StatefulWidget {
-  const MyAccount({Key? key}) : super(key: key);
-
+  final bool isKycVerified;
+  // ignore: use_key_in_widget_constructors
+  const MyAccount(this.isKycVerified);
   @override
   State<MyAccount> createState() => _MyAccountState();
 }
@@ -17,6 +27,42 @@ class _MyAccountState extends State<MyAccount> {
     true: "Your KYC has been completed.",
     false: "Complete your KYC."
   };
+  @override
+  void initState() {
+    is_KYC_completed = widget.isKycVerified;
+    super.initState();
+  }
+
+  offileneAdhaar() {
+    return OfflineAadhaarSdk(
+      baseUrl: 'https://pre-production.deepvue.tech/v1',
+      clientId: 'Smart India Hack(Amit)',
+      clientSecret:
+          '6f0ee1005c149e881e5cf1498463f47fe9e6c40feac449e1a99fd4f45f71b671',
+      useFaceMatch: false,
+      imageUrl:
+          "https://upload.wikimedia.org/wikipedia/en/thumb/c/cf/Aadhaar_Logo.svg/375px-Aadhaar_Logo.svg.png",
+      failureCallback: (int failureCode) {
+        Fluttertoast.showToast(msg: 'An error occured');
+      },
+      successCallback: (String response) {
+        FirebaseDatabase.instance
+            .ref()
+            .child('User Information')
+            .child(FirebaseAuth.instance.currentUser!.uid)
+            .update({"isAdhaarVerified": true});
+        log(response.toString());
+      },
+    );
+  }
+
+  void startSdk(BuildContext context, OfflineAadhaarSdk aadhaarSdk) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => aadhaarSdk),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +86,9 @@ class _MyAccountState extends State<MyAccount> {
         child: Column(
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                startSdk(context, offileneAdhaar());
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 color: Color(0xffF5F6FA),
