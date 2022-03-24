@@ -119,9 +119,10 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
                                 RegisterScreen2()));
-                  } else if (dob == null) {
+                  } else if (_formkey.currentState!.validate() && dob == null) {
                     Fluttertoast.showToast(msg: "Please select date of birth");
-                  } else {
+                  } else if (_formkey.currentState!.validate() &&
+                      _image == null) {
                     Fluttertoast.showToast(
                         msg: "Please select a profile picture");
                   }
@@ -158,8 +159,8 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
                                       height: 130,
                                       fit: BoxFit.fill,
                                     )
-                                  : Image.network(
-                                      'https://www.vippng.com/png/detail/416-4161690_empty-profile-picture-blank-avatar-image-circle.png',
+                                  : Image.asset(
+                                      "assets/user_avatar.png",
                                       width: 130,
                                       height: 130,
                                       fit: BoxFit.fill,
@@ -227,8 +228,6 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
                                 : "Please choose DOB ",
                             textCapitalization: TextCapitalization.words,
                             enabled: false,
-                            
-                            
                             decoration: const InputDecoration(
                                 disabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.grey)),

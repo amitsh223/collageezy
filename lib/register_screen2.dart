@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:collageezy/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -89,7 +91,20 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                if (_formkey.currentState!.validate() &&
+                    _10thMarksheetImage != null &&
+                    _12thMarksheetImage != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext ctx) => HomeScreen()));
+                } else if (_formkey.currentState!.validate() &&
+                    (_10thMarksheetImage == null ||
+                        _12thMarksheetImage == null)) {
+                  Fluttertoast.showToast(msg: "Please upload marksheet photos");
+                }
+              },
               style: ButtonStyle(
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)))),
@@ -117,7 +132,17 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                         _showPicker(context, true);
                       },
                       child: _10thMarksheetImage == null
-                          ? Image.network("https://via.placeholder.com/350x200")
+                          ? Container(
+                              child: Center(
+                                child: Icon(
+                                  Icons.image,
+                                  size: 50,
+                                ),
+                              ),
+                              width: 350,
+                              height: 200,
+                              color: Colors.grey[350],
+                            )
                           : Image.file(
                               File(_10thMarksheetImage!.path),
                               width: 350,
@@ -162,7 +187,17 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                     },
                     child: Container(
                       child: _12thMarksheetImage == null
-                          ? Image.network("https://via.placeholder.com/350x200")
+                          ? Container(
+                              child: Center(
+                                child: Icon(
+                                  Icons.image,
+                                  size: 50,
+                                ),
+                              ),
+                              width: 350,
+                              height: 200,
+                              color: Colors.grey[350],
+                            )
                           : Image.file(
                               File(_12thMarksheetImage!.path),
                               width: 350,
@@ -200,7 +235,6 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                     height: 15,
                   ),
                   TextFormField(
-                    keyboardType: TextInputType.number,
                     validator: (val) {
                       if (val!.isEmpty) {
                         return "required";
