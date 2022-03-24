@@ -1,9 +1,10 @@
 import 'dart:developer';
 
-import 'package:collageezy/home_screen.dart';
+
 import 'package:collageezy/login_screen.dart';
 import 'package:collageezy/profile_menu.dart';
 import 'package:collageezy/register_screen1.dart';
+import 'package:collageezy/tab_page.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,8 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   // bool isRegistered = false;
+ 
+
 
   getUser() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -33,9 +36,10 @@ class _SplashScreenState extends State<SplashScreen> {
       final userData = data.snapshot.value as Map;
 
       if ((userData['isProfileCompleted'] != null)) {
+        
         Future.delayed(const Duration(seconds: 5)).then((value) {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (ctx) => const HomeScreen()));
+              MaterialPageRoute(builder: (ctx) => const TabPage()));
         });
       } else {
         Future.delayed(const Duration(seconds: 5)).then((value) {

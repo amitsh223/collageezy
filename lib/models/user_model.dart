@@ -13,21 +13,21 @@ class UserInformation {
   final String? school12;
   final bool? isAdhaarVerified;
   final bool? isRegistrationCompleted;
-
-  UserInformation({
-    this.city,
-    this.dateOfBirth,
-    this.id,
-    this.imageUrl,
-    this.name,
-    this.phone,
-    this.state,
-    this.percentage10,
-    this.adhaarNo,
-    this.percentage12,
-    this.school10,
-    this.school12,
-    this.isAdhaarVerified,
-    this.isRegistrationCompleted,
-  });
+  final String? rollNo;
+  UserInformation(
+      {this.city,
+      this.dateOfBirth,
+      this.id,
+      this.imageUrl,
+      this.name,
+      this.phone,
+      this.state,
+      this.percentage10,
+      this.adhaarNo,
+      this.percentage12,
+      this.school10,
+      this.school12,
+      this.isAdhaarVerified,
+      this.isRegistrationCompleted,
+      this.rollNo});
 }

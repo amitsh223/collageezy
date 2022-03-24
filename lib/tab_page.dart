@@ -1,9 +1,16 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 
+import 'package:collageezy/models/user_model.dart';
 import 'package:collageezy/profile_menu.dart';
+import 'package:collageezy/providers/user_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 
 class TabPage extends StatefulWidget {
   const TabPage({Key? key, this.title}) : super(key: key);
@@ -28,8 +35,41 @@ class _TabPageState extends State<TabPage> {
   //     color: Color,
   //   )
   // ];
+  getUserData() async {
+    final data = await FirebaseDatabase.instance
+        .ref()
+        .child('User Information')
+        .child(FirebaseAuth.instance.currentUser!.uid)
+        .once();
+    final userData = data.snapshot.value as Map;
+    if (userData.isNotEmpty) {
+      UserInformation user = UserInformation(
+          percentage10: userData['10Marks'],
+          city: userData['city'],
+          name: userData['name'],
+          // ignore: prefer_if_null_operators
+          adhaarNo: userData['adhaarNo'] != null
+              ? userData['adhaarNo']
+              : 'not Available',
+          dateOfBirth: userData['dob'],
+          id: userData['uid'],
+          imageUrl: userData['imageUrl'],
+          phone: userData['phone'],
+          state: userData['state'],
+          percentage12: userData['12Marks'],
+          isRegistrationCompleted: userData['isProfileCompleted'],
+          rollNo: userData['rollNo'],
+          // ignore: prefer_if_null_operators
+          isAdhaarVerified: userData['isAdhaarVerified'] != null
+              ? userData['isAdhaarVerified']
+              : false);
+      Provider.of<UserProvider>(context, listen: false).setUser(user);
+    }
+  }
+
   @override
   void initState() {
+    getUserData();
     super.initState();
   }
 
@@ -37,7 +77,7 @@ class _TabPageState extends State<TabPage> {
     setState(() {
       selectedIndex = index;
     });
-    log("Selected index $selectedIndex");
+    // log("Selected index $selectedIndex");
   }
 
   @override
@@ -51,7 +91,7 @@ class _TabPageState extends State<TabPage> {
             child: GNav(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               duration: Duration(milliseconds: 800),
-              gap: 8.5,
+              gap: 8,
               tabs: [
                 GButton(
                   iconActiveColor: Colors.purple,

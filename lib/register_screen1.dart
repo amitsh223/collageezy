@@ -369,26 +369,6 @@ class _RegisterScreen1State extends State<RegisterScreen1> {
                               border: OutlineInputBorder()),
                           obscureText: false,
                         ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        TextFormField(
-                          textCapitalization: TextCapitalization.words,
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return 'required';
-                            } else {
-                              universityRollNo = val;
-                              return null;
-                            }
-                          },
-                          decoration: const InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              hintText: 'University Roll No',
-                              labelText: 'University Roll No',
-                              border: OutlineInputBorder()),
-                          obscureText: false,
-                        ),
                       ]),
                 ),
               ),

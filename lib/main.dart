@@ -1,3 +1,6 @@
+// ignore_for_file: use_key_in_widget_constructors
+
+import 'package:collageezy/providers/user_provider.dart';
 import 'package:collageezy/splesh_screen.dart';
 import 'package:collageezy/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,7 +30,9 @@ void main() async {
   //   messagingSenderId: '122672089783',
   //   projectId: 'collegeeasy-28a78',
   // ));
-  runApp(MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: ((context) => UserProvider()))
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

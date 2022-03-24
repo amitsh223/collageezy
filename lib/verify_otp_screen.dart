@@ -1,9 +1,8 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'dart:developer';
-
-import 'package:collageezy/home_screen.dart';
 import 'package:collageezy/main.dart';
+import 'package:collageezy/tab_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +65,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
         Navigator.of(context).popUntil((route) => route.isFirst);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => TabPage(),
           ),
         );
         // Handle loogged in state
@@ -119,7 +118,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
           Navigator.of(context).popUntil((route) => route.isFirst);
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => HomeScreen(),
+              builder: (context) => TabPage(),
             ),
           );
         } else {
