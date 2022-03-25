@@ -3,10 +3,14 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:collageezy/community_screen.dart';
+import 'package:collageezy/latest_news.dart';
 import 'package:collageezy/login_screen.dart';
 import 'package:collageezy/models/user_model.dart';
 import 'package:collageezy/my_account.dart';
 import 'package:collageezy/providers/user_provider.dart';
+import 'package:collageezy/support.dart';
+import 'package:collageezy/web_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:aadhaar_offline_ekyc/aadhaar_offline_ekyc.dart';
@@ -83,7 +87,6 @@ class _ProfileMenuState extends State<ProfileMenu> {
     // _cropImage();
   }
 
- 
   @override
   void initState() {
     getData();
@@ -96,6 +99,16 @@ class _ProfileMenuState extends State<ProfileMenu> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.teal,
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (ctx) => Support()));
+          },
+          child: Icon(
+            Icons.support_agent,
+            size: 32,
+          )),
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
@@ -133,7 +146,7 @@ class _ProfileMenuState extends State<ProfileMenu> {
               ],
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             InkWell(
               onTap: () {
@@ -186,10 +199,13 @@ class _ProfileMenuState extends State<ProfileMenu> {
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (ctx) => LatestNews()));
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 color: Color(
@@ -197,19 +213,22 @@ class _ProfileMenuState extends State<ProfileMenu> {
                 ),
                 child: ListTile(
                   leading: LineIcon(
-                    LineIcons.cog,
+                    LineIcons.globe,
                     color: Colors.orange,
                   ),
-                  title: Text("Settings"),
+                  title: Text("Latest News"),
                   trailing: Icon(Icons.arrow_forward_ios_outlined),
                 ),
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) => ComunityScreen()));
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 color: Color(0xffF5F6FA),
@@ -218,14 +237,36 @@ class _ProfileMenuState extends State<ProfileMenu> {
                     LineIcons.questionCircle,
                     color: Colors.orange,
                   ),
-                  title: Text("Help Center"),
+                  title: Text("Community"),
                   trailing: Icon(Icons.arrow_forward_ios_outlined),
                 ),
               ),
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) => TrainingVideos()));
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                color: Color(0xffF5F6FA),
+                child: ListTile(
+                  leading: LineIcon(
+                    LineIcons.questionCircle,
+                    color: Colors.orange,
+                  ),
+                  title: Text("Training Videos"),
+                  trailing: Icon(Icons.arrow_forward_ios_outlined),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+
             InkWell(
               onTap: () {
                 FirebaseAuth.instance.signOut().then((value) {
