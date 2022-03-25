@@ -1,3 +1,5 @@
+import 'package:collageezy/providers/adhaar_provider.dart';
+
 List<String> states = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
@@ -37,3 +39,4 @@ List<String> states = [
   "Puducherry"
 ];
 List<String> genderList = ["Male", "Female", "Others"];
+

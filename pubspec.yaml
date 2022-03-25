@@ -55,6 +55,7 @@ dependencies:
   aadhaar_offline_ekyc: ^0.0.1
   google_nav_bar: ^5.0.6
   line_icons: 
+  get:
 
 dev_dependencies:
   flutter_test:

@@ -14,6 +14,7 @@ class UserInformation {
   final bool? isAdhaarVerified;
   final bool? isRegistrationCompleted;
   final String? rollNo;
+  final String? clgName;
   UserInformation(
       {this.city,
       this.dateOfBirth,
@@ -29,5 +30,6 @@ class UserInformation {
       this.school12,
       this.isAdhaarVerified,
       this.isRegistrationCompleted,
-      this.rollNo});
+      this.rollNo,
+      this.clgName});
 }

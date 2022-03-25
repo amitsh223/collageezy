@@ -1,9 +1,12 @@
 // ignore_for_file: non_constant_identifier_names, prefer_const_constructors
 
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:aadhaar_offline_ekyc/offline_aadhaar_sdk.dart';
+import 'package:aadhaar_offline_ekyc/pages/main_page.dart';
 import 'package:collageezy/editProfile.dart';
+import 'package:collageezy/providers/adhaar_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,6 +15,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 class MyAccount extends StatefulWidget {
   final bool isKycVerified;
@@ -46,12 +50,16 @@ class _MyAccountState extends State<MyAccount> {
         Fluttertoast.showToast(msg: 'An error occured');
       },
       successCallback: (String response) {
+        log(response.toString());
+        // Provider.of<AdhaarProvider>(context, listen: false).adhaarNo =
+            
+
         FirebaseDatabase.instance
             .ref()
             .child('User Information')
             .child(FirebaseAuth.instance.currentUser!.uid)
             .update({"isAdhaarVerified": true});
-        log(response.toString());
+        // Map data = json.decode(response.toString());
       },
     );
   }

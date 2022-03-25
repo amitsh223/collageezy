@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "122672089783-2cscp78qaocdo5sb546cnev9opch56v5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.collageezy.app",
+            "certificate_hash": "f3a14e195b4c64fb31ea8911748c44e1ea03e65d"
+          }
+        },
+        {
           "client_id": "122672089783-jp8m5rji4svbm83odd4bcm5vlasvjcbs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

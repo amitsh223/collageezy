@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:collageezy/homeScreen.dart';
 
 import 'package:collageezy/main.dart';
+import 'package:collageezy/register_screen1.dart';
 import 'package:collageezy/tab_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -67,7 +68,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
         Navigator.of(context).popUntil((route) => route.isFirst);
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => TabPage(),
+            builder: (context) => RegisterScreen1(),
           ),
         );
         // Handle loogged in state
@@ -120,7 +121,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen>
           Navigator.of(context).popUntil((route) => route.isFirst);
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => TabPage(),
+              builder: (context) => RegisterScreen1(),
             ),
           );
         } else {
