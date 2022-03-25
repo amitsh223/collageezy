@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 
+import 'package:collageezy/anouncement_search.dart';
 import 'package:collageezy/models/announcementModel.dart';
 import 'package:collageezy/providers/announcement_post_provider.dart';
 import 'package:collageezy/providers/user_provider.dart';
@@ -56,7 +59,7 @@ class _AnnouncementState extends State<Announcement> {
               SizedBox(
                 width: 10,
               ),
-              Text("Collageezy", style: GoogleFonts.droidSerif(fontSize: 22))
+              Text("CollageEasy", style: GoogleFonts.droidSerif(fontSize: 22))
             ]),
             SizedBox(
               height: 10,
@@ -64,6 +67,11 @@ class _AnnouncementState extends State<Announcement> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0.0),
               child: TextField(
+                onTap: () {
+                  showSearch(
+                      context: context,
+                      delegate: AnouncementSearch(lb: announcementList));
+                },
                 decoration: InputDecoration(
                     hintText: "Search",
                     prefixIcon: Icon(

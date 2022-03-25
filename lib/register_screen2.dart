@@ -2,10 +2,11 @@
 import 'dart:developer';
 import 'dart:io';
 
-
-
+import 'package:collageezy/college_list.dart';
 import 'package:collageezy/main.dart';
 import 'package:collageezy/tab_page.dart';
+import 'package:drop_down_list/drop_down_list.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -89,8 +90,34 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
     // _cropImage();
   }
 
+  TextEditingController _searchTextEditingController = TextEditingController();
+
+  void onTextFieldTap() {
+    DropDownState(
+      DropDown(
+        submitButtonText: 'Done',
+        submitButtonColor: const Color.fromRGBO(70, 76, 222, 1),
+        searchHintText: 'Type..',
+        bottomSheetTitle: 'Search',
+        searchBackgroundColor: Colors.black12,
+        dataList: collegeList.map((e) => SelectedListItem(false, e)).toList(),
+        selectedItems: (List<dynamic> selectedList) {
+          // showSnackBar(selectedList.toString());
+        },
+        selectedItem: (String selected) {
+          textEditingController.text = selected;
+          // showSnackBar(selected);
+          // widget.textEditingController.text = selected;
+        },
+        enableMultipleSelection: false,
+        searchController: _searchTextEditingController,
+      ),
+    ).showModal(context);
+  }
+
   String? rollNo;
   bool isLoading = false;
+  TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -296,21 +323,29 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                   const SizedBox(
                     height: 15,
                   ),
-                  TextFormField(
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return "required";
-                      } else {
-                        nameOfClg = val;
-                        return null;
-                      }
+                  InkWell(
+                    onTap: () {
+                      onTextFieldTap();
                     },
-                    decoration: const InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        hintText: 'Name of College/Unversity',
-                        labelText: 'Name of College/Unversity',
-                        border: OutlineInputBorder()),
-                    obscureText: false,
+                    child: TextFormField(
+                      enabled: false,
+                      controller: textEditingController,
+                      onTap: () {},
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "required";
+                        } else {
+                          nameOfClg = val;
+                          return null;
+                        }
+                      },
+                      decoration: const InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          hintText: 'Name of College/Unversity',
+                          labelText: 'Name of College/Unversity',
+                          border: OutlineInputBorder()),
+                      obscureText: false,
+                    ),
                   ),
                   SizedBox(
                     height: height * .02,

@@ -52,7 +52,6 @@ class _MyAccountState extends State<MyAccount> {
       successCallback: (String response) {
         log(response.toString());
         // Provider.of<AdhaarProvider>(context, listen: false).adhaarNo =
-            
 
         FirebaseDatabase.instance
             .ref()
@@ -95,7 +94,11 @@ class _MyAccountState extends State<MyAccount> {
           children: [
             InkWell(
               onTap: () {
-                startSdk(context, offileneAdhaar());
+                if (!is_KYC_completed) {
+                  startSdk(context, offileneAdhaar());
+                } else {
+                  Fluttertoast.showToast(msg: 'Already Verified');
+                }
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10),

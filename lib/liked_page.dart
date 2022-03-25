@@ -50,7 +50,7 @@ class _LikePageState extends State<LikePage> {
               SizedBox(
                 width: 10,
               ),
-              Text("Collageezy", style: GoogleFonts.droidSerif(fontSize: 22))
+              Text("CollageEasy", style: GoogleFonts.droidSerif(fontSize: 22))
             ]),
             SizedBox(
               height: 10,

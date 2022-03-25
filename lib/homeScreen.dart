@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:collageezy/models/jobModel.dart';
+import 'package:collageezy/search_jobs.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   width: 10,
                 ),
-                Text("Collageezy", style: GoogleFonts.droidSerif(fontSize: 22))
+                Text("CollageEasy", style: GoogleFonts.droidSerif(fontSize: 22))
               ]),
               SizedBox(
                 height: 10,
@@ -61,6 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0.0),
                 child: TextField(
+                  onTap: () {
+                    showSearch(
+                        context: context, delegate: searchLabourer(lb: jobs));
+                  },
                   decoration: InputDecoration(
                       hintText: "Search",
                       prefixIcon: Icon(
