@@ -1,11 +1,11 @@
 // ignore_for_file: use_key_in_widget_constructors
 
-
 import 'package:collageezy/providers/adhaar_provider.dart';
 
 import 'package:collageezy/providers/announcement_post_provider.dart';
 
 import 'package:collageezy/providers/user_provider.dart';
+import 'package:collageezy/register_screen1.dart';
 import 'package:collageezy/splesh_screen.dart';
 import 'package:collageezy/tab_page.dart';
 import 'package:collageezy/theme.dart';
@@ -40,9 +40,7 @@ void main() async {
   // ));
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: ((context) => UserProvider())),
-
     ChangeNotifierProvider(create: ((context) => AdhaarProvider())),
-
     ChangeNotifierProvider(create: ((context) => AnnouncementProvider()))
   ], child: MyApp()));
 }
@@ -51,12 +49,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-
         debugShowCheckedModeBanner: false,
         title: 'CollegeEasy',
         home: SplashScreen());
 
-        debugShowCheckedModeBanner: false, title: 'Admin', home: SplashScreen());
-
+    // debugShowCheckedModeBanner: false, title: 'Admin', home: SplashScreen());
   }
 }

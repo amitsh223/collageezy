@@ -1,4 +1,6 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, use_key_in_widget_constructors
+
+import 'dart:developer';
 
 import 'package:collageezy/models/jobModel.dart';
 import 'package:flutter/material.dart';
@@ -7,48 +9,31 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  List<JobModel> jobList;
+  HomeScreen(this.jobList);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<JobModel> jobs = [
-    JobModel(
-        company: "Amazon",
-        jobTitle: "Software Engineer",
-        location: "Jaipur",
-        isPartTime: false,
-        expReq: "1",
-        salary: "35000"),
-    JobModel(
-        company: "Snapdeal",
-        jobTitle: "Software Engineer",
-        location: "Jaipur",
-        isPartTime: true,
-        expReq: "1",
-        salary: "30000"),
-    JobModel(
-        company: "Twitter",
-        jobTitle: "Research Engineer",
-        location: "Jaipur",
-        isPartTime: true,
-        expReq: "1",
-        salary: "40000"),
-    JobModel(
-        company: "Google",
-        jobTitle: "Software Engineer",
-        location: "Jaipur",
-        isPartTime: false,
-        expReq: "1",
-        salary: "50000"),
-  ];
+  List<JobModel> jobs = [];
+  // setData() {
+  //   setState(() {
+  //     jobs = widget.jobList;
+  //     log(jobs.length.toString());
+  //   });
+  // }
 
-  
+  // @override
+  // void initState() {
+
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    jobs = widget.jobList;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -105,7 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: ListView.builder(
-                    
                     itemCount: jobs.length,
                     itemBuilder: (BuildContext ctx, int index) {
                       return Card(
@@ -183,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         width: 5,
                                       ),
                                       Text(jobs[index].expReq != null
-                                          ? jobs[index].expReq! + " Year"
+                                          ? jobs[index].expReq!
                                           : "")
                                     ],
                                   ),

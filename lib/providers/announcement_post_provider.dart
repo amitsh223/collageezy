@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:collageezy/models/announcementModel.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 
 class AnnouncementProvider with ChangeNotifier {
   List<AnnouncementModel> announcementsList = [];
+  List<AnnouncementModel> likedPost = [];
   List<AnnouncementModel> tempList = [
     AnnouncementModel(
         title: "Upcoming: SIH Prelim Rounds",
@@ -36,10 +38,52 @@ class AnnouncementProvider with ChangeNotifier {
   ];
 
   updateAnnouncemnets() {
-    if (announcementsList.length == 0) {
-      announcementsList.addAll(tempList);
+    FirebaseDatabase.instance
+        .ref()
+        .child("Announcement")
+        .onValue
+        .listen((event) {
+      final data = event.snapshot.value as Map;
+      if (data.isNotEmpty) {
+        log(data.toString());
+        data.forEach((key, value) {
+          log(value.toString());
+        });
+        // jobList = [];
+        // print(data.toString());
+        // data.forEach((key, value) {
+        //   JobModel jobModel = JobModel(
+        //       company: value['companyName'],
+        //       salary: value['salary'],
+        //       jobTitle: value['jobTitle'],
+        //       expReq: 'Fresher',
+        //       location: value['location'],
+        //       isPartTime:
+        //           value['typeOfJob'] == 'Work from home' ? true : false);
+        //   jobList.add(jobModel);
+        // });
+        // setState(() {
+        //   log(jobList.length.toString());
+        // });
+      }
+    });
+  }
+
+  addLikedPost(AnnouncementModel announcement) {
+    if (!likedPost.contains(announcement)) {
+      likedPost.add(announcement);
     }
-    log(announcementsList.length.toString());
+    notifyListeners();
+  }
+
+  removeLikedPost(AnnouncementModel announcement) {
+    if (!likedPost.contains(announcement)) {
+      if (!likedPost.contains(announcement)) {
+        likedPost.add(announcement);
+      }
+    }
+
+    notifyListeners();
   }
 
   getAnnouncementList() {

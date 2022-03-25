@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 class AnnouncementModel {
     String? title;
     String? summary;
@@ -16,7 +15,6 @@ class AnnouncementModel {
     this.isLiked=false,
   });
     
-
   AnnouncementModel copyWith({
     String? title,
     String? summary,

@@ -2,14 +2,15 @@
 
 import 'dart:developer';
 
-
 import 'package:collageezy/announcement.dart';
 import 'package:collageezy/homeScreen.dart';
 import 'package:collageezy/liked_page.dart';
+import 'package:collageezy/models/jobModel.dart';
 
 import 'package:collageezy/models/user_model.dart';
 
 import 'package:collageezy/profile_menu.dart';
+import 'package:collageezy/providers/announcement_post_provider.dart';
 import 'package:collageezy/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -77,21 +78,54 @@ class _TabPageState extends State<TabPage> {
     }
   }
 
+  List<JobModel> jobList = [];
+  getJobData() {
+    FirebaseDatabase.instance.ref().child("Jobs").onValue.listen((event) {
+      final data = event.snapshot.value as Map;
+      if (data.isNotEmpty) {
+        jobList = [];
+        print(data.toString());
+        data.forEach((key, value) {
+          JobModel jobModel = JobModel(
+              company: value['companyName'],
+              salary: value['salary'],
+              jobTitle: value['jobTitle'],
+              expReq: 'Fresher',
+              location: value['location'],
+              isPartTime:
+                  value['typeOfJob'] == 'Work from home' ? true : false);
+          jobList.add(jobModel);
+        });
+        setState(() {
+          log(jobList.length.toString());
+        });
+      }
+    });
+  }
+
+  getAnnouncemets() {
+    Provider.of<AnnouncementProvider>(context, listen: false)
+        .updateAnnouncemnets();
+    
+  }
+
   pushAdhaarCard() {
     FirebaseDatabase.instance
         .ref()
         .child('User Information')
         .child(FirebaseAuth.instance.currentUser!.uid)
-        .update({"adhaarNo": widget.adhaarCardNo});
+        .update({"adhaarNo": "995613926111"});
   }
 
   @override
   void initState() {
-    if (widget.adhaarCardNo!.isNotEmpty) {
-      pushAdhaarCard();
-    }
+    // if (widget.adhaarCardNo!.isNotEmpty) {
+    pushAdhaarCard();
+    // }
     // log("Abcdef"+widget.adhaarCardNo.toString());
     getUserData();
+    getJobData();
+    getAnnouncemets();
     super.initState();
   }
 
@@ -161,7 +195,7 @@ class _TabPageState extends State<TabPage> {
           duration: Duration(milliseconds: 800),
           child: selectedIndex != 3
               ? selectedIndex == 0
-                  ? HomeScreen()
+                  ? HomeScreen(jobList)
                   : selectedIndex == 1
                       ? Announcement()
                       : LikePage()
