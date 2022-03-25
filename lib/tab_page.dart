@@ -2,9 +2,11 @@
 
 import 'dart:developer';
 
+
 import 'package:collageezy/announcement.dart';
 import 'package:collageezy/homeScreen.dart';
 import 'package:collageezy/liked_page.dart';
+
 import 'package:collageezy/models/user_model.dart';
 
 import 'package:collageezy/profile_menu.dart';
@@ -16,8 +18,11 @@ import 'package:line_icons/line_icons.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
+import 'homeScreen.dart';
+
 class TabPage extends StatefulWidget {
-  const TabPage({Key? key, this.title}) : super(key: key);
+  final String? adhaarCardNo;
+  const TabPage({Key? key, this.title, this.adhaarCardNo}) : super(key: key);
 
   final String? title;
 
@@ -61,6 +66,7 @@ class _TabPageState extends State<TabPage> {
           phone: userData['phone'],
           state: userData['state'],
           percentage12: userData['12Marks'],
+          clgName: userData['nameOfCollege'],
           isRegistrationCompleted: userData['isProfileCompleted'],
           rollNo: userData['rollNo'],
           // ignore: prefer_if_null_operators
@@ -71,8 +77,20 @@ class _TabPageState extends State<TabPage> {
     }
   }
 
+  pushAdhaarCard() {
+    FirebaseDatabase.instance
+        .ref()
+        .child('User Information')
+        .child(FirebaseAuth.instance.currentUser!.uid)
+        .update({"adhaarNo": widget.adhaarCardNo});
+  }
+
   @override
   void initState() {
+    if (widget.adhaarCardNo!.isNotEmpty) {
+      pushAdhaarCard();
+    }
+    // log("Abcdef"+widget.adhaarCardNo.toString());
     getUserData();
     super.initState();
   }

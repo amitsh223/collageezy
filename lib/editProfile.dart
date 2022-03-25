@@ -1,5 +1,8 @@
+import 'package:collageezy/models/user_model.dart';
+import 'package:collageezy/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -14,8 +17,22 @@ class _EditProfileState extends State<EditProfile> {
   String? enrollmentNo = "19EJCCS023";
   String? collegeName = "Jaipur Engineering College And Research Center";
   String? adhaarNo = "123412341234";
+
+  late UserInformation user;
+  @override
+  void initState() {
+    user = Provider.of<UserProvider>(context, listen: false).userInfo;
+    name = user.name;
+    contact = user.phone;
+    enrollmentNo = user.rollNo;
+    collegeName = user.clgName;
+    adhaarNo = user.adhaarNo;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -38,15 +55,9 @@ class _EditProfileState extends State<EditProfile> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             children: [
-              Center(
-                child: ClipOval(
-                  child: Image.asset(
-                    "assets/user_avatar.png",
-                    width: 130,
-                    height: 130,
-                    fit: BoxFit.fill,
-                  ),
-                ),
+              CircleAvatar(
+                radius: width * .2,
+                backgroundImage: NetworkImage(user.imageUrl!),
               ),
               SizedBox(
                 height: 30,
@@ -87,6 +98,7 @@ class _EditProfileState extends State<EditProfile> {
                 enabled: false,
                 initialValue: enrollmentNo,
               ),
+              // ignore: prefer_const_constructors
               SizedBox(
                 height: 20,
               ),
@@ -100,6 +112,7 @@ class _EditProfileState extends State<EditProfile> {
                 enabled: false,
                 initialValue: collegeName,
               ),
+              // ignore: prefer_const_constructors
               SizedBox(
                 height: 20,
               ),
