@@ -106,7 +106,9 @@ class _TabPageState extends State<TabPage> {
   getAnnouncemets() {
     Provider.of<AnnouncementProvider>(context, listen: false)
         .updateAnnouncemnets();
-    
+  }
+  getLikedPost(){
+    Provider.of<AnnouncementProvider>(context, listen: false).updateLikedPost(FirebaseAuth.instance.currentUser!.uid);
   }
 
   pushAdhaarCard() {
@@ -126,6 +128,7 @@ class _TabPageState extends State<TabPage> {
     getUserData();
     getJobData();
     getAnnouncemets();
+    getLikedPost();
     super.initState();
   }
 
@@ -165,7 +168,7 @@ class _TabPageState extends State<TabPage> {
                   backgroundColor: Colors.amber[600]!.withOpacity(.2),
                   iconSize: 24,
                   icon: LineIcons.bullhorn,
-                  text: 'Announcements',
+                  text: 'Events',
                 ),
                 GButton(
                   iconActiveColor: Colors.pink,

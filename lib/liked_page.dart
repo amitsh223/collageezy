@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:collageezy/models/announcementModel.dart';
 import 'package:collageezy/providers/announcement_post_provider.dart';
+import 'package:collageezy/providers/user_provider.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -13,22 +17,22 @@ class LikePage extends StatefulWidget {
 
 class _LikePageState extends State<LikePage> {
   List<AnnouncementModel> announcementList = [];
+  List<AnnouncementModel> likedPost = [];
   @override
   void initState() {
-    getAnnouncements();
+    // getAnnouncements();
     // TODO: implement initState
     super.initState();
   }
 
-  getAnnouncements() {
-    Provider.of<AnnouncementProvider>(context, listen: false)
-        .updateAnnouncemnets();
-    announcementList = Provider.of<AnnouncementProvider>(context, listen: false)
-        .getAnnouncementList();
-  }
-
   @override
   Widget build(BuildContext context) {
+    likedPost =
+        Provider.of<AnnouncementProvider>(context, listen: true).likedPost;
+    final List<String> likedIds =
+        Provider.of<AnnouncementProvider>(context, listen: true).likedListIds;
+    final user = Provider.of<UserProvider>(context, listen: false).userInfo;
+    log(likedPost.length.toString());
     return Scaffold(
         body: SafeArea(
       child: Padding(
@@ -83,7 +87,7 @@ class _LikePageState extends State<LikePage> {
             ),
             Expanded(
               child: ListView.builder(
-                  itemCount: announcementList.length,
+                  itemCount: likedPost.length,
                   itemBuilder: (BuildContext ctx, int index) {
                     return Card(
                       margin: EdgeInsets.symmetric(vertical: 10),
@@ -95,18 +99,37 @@ class _LikePageState extends State<LikePage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(announcementList[index].title ?? "",
+                                Text(likedPost[index].title ?? "",
                                     style: GoogleFonts.droidSerif(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w700)),
                                 IconButton(
                                   onPressed: () {
-                                    setState(() {
-                                      announcementList[index].isLiked =
-                                          !announcementList[index].isLiked!;
+                                    FirebaseDatabase.instance
+                                        .ref()
+                                        .child("Following Announcements")
+                                        .child(user.id.toString())
+                                        .child(likedPost[index].id!)
+                                        .once()
+                                        .then((value) {
+                                      if (value.snapshot.exists) {
+                                        FirebaseDatabase.instance
+                                            .ref()
+                                            .child("Following Announcements")
+                                            .child(user.id.toString())
+                                            .child(likedPost[index].id!)
+                                            .remove();
+                                      } else {
+                                        FirebaseDatabase.instance
+                                            .ref()
+                                            .child("Following Announcements")
+                                            .child(user.id.toString())
+                                            .update(
+                                                {likedPost[index].id!: true});
+                                      }
                                     });
                                   },
-                                  icon: announcementList[index].isLiked!
+                                  icon: likedIds.contains(likedPost[index].id)
                                       ? Icon(
                                           Icons.favorite,
                                           color: Colors.pink,
@@ -121,7 +144,7 @@ class _LikePageState extends State<LikePage> {
                               height: 10,
                             ),
                             Text(
-                              announcementList[index].summary ?? "",
+                              likedPost[index].summary ?? "",
                             ),
                             SizedBox(
                               height: 10,
@@ -130,11 +153,11 @@ class _LikePageState extends State<LikePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  announcementList[index].dateOfPublish ?? "",
+                                  likedPost[index].dateOfPublish ?? "",
                                   style: TextStyle(color: Colors.grey),
                                 ),
                                 Text(
-                                  announcementList[index].nameOfPublisher ?? "",
+                                  likedPost[index].nameOfPublisher ?? "",
                                   style: TextStyle(color: Colors.grey),
                                 )
                               ],

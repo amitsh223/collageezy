@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:collageezy/models/announcementModel.dart';
 import 'package:collageezy/providers/announcement_post_provider.dart';
+import 'package:collageezy/providers/user_provider.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -26,12 +28,17 @@ class _AnnouncementState extends State<Announcement> {
   getAnnouncements() {
     Provider.of<AnnouncementProvider>(context, listen: false)
         .updateAnnouncemnets();
-    announcementList = Provider.of<AnnouncementProvider>(context, listen: false)
-        .getAnnouncementList();
   }
 
   @override
   Widget build(BuildContext context) {
+    announcementList = Provider.of<AnnouncementProvider>(context, listen: true)
+        .announcementsList;
+    final List<AnnouncementModel> likedList =
+        Provider.of<AnnouncementProvider>(context, listen: true).likedPost;
+    final user = Provider.of<UserProvider>(context, listen: false).userInfo;
+    final List<String> likedIds =
+        Provider.of<AnnouncementProvider>(context, listen: true).likedListIds;
     return Scaffold(
         body: SafeArea(
       child: Padding(
@@ -104,12 +111,39 @@ class _AnnouncementState extends State<Announcement> {
                                         fontWeight: FontWeight.w700)),
                                 IconButton(
                                   onPressed: () {
-                                    setState(() {
-                                      announcementList[index].isLiked =
-                                          !announcementList[index].isLiked!;
+                                    FirebaseDatabase.instance
+                                        .ref()
+                                        .child("Following Announcements")
+                                        .child(user.id.toString())
+                                        .child(announcementList[index].id!)
+                                        .once()
+                                        .then((value) {
+                                      if (value.snapshot.exists) {
+                                        FirebaseDatabase.instance
+                                            .ref()
+                                            .child("Following Announcements")
+                                            .child(user.id.toString())
+                                            .child(announcementList[index].id!)
+                                            .remove();
+                                      } else {
+                                        FirebaseDatabase.instance
+                                            .ref()
+                                            .child("Following Announcements")
+                                            .child(user.id.toString())
+                                            .update({
+                                          announcementList[index].id!: true
+                                        }).then((value) {
+                                          setState(() {
+                                            announcementList[index].isLiked =
+                                                !announcementList[index]
+                                                    .isLiked!;
+                                          });
+                                        });
+                                      }
                                     });
                                   },
-                                  icon: announcementList[index].isLiked!
+                                  icon: likedIds
+                                          .contains(announcementList[index].id)
                                       ? Icon(
                                           Icons.favorite,
                                           color: Colors.pink,
@@ -123,8 +157,11 @@ class _AnnouncementState extends State<Announcement> {
                             SizedBox(
                               height: 10,
                             ),
-                            Text(
-                              announcementList[index].summary ?? "",
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                announcementList[index].summary ?? "",
+                              ),
                             ),
                             SizedBox(
                               height: 10,

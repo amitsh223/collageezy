@@ -1,5 +1,6 @@
 import 'dart:convert';
 class AnnouncementModel {
+    String? id;
     String? title;
     String? summary;
     String? description;
@@ -7,6 +8,7 @@ class AnnouncementModel {
     String? nameOfPublisher;
     bool? isLiked;
   AnnouncementModel({
+    this.id,
     this.title,
     this.summary,
     this.description,
@@ -16,6 +18,7 @@ class AnnouncementModel {
   });
     
   AnnouncementModel copyWith({
+    String? id,
     String? title,
     String? summary,
     String? description,
@@ -24,6 +27,7 @@ class AnnouncementModel {
     bool? isLiked,
   }) {
     return AnnouncementModel(
+      id: id ?? this.id,
       title: title ?? this.title,
       summary: summary ?? this.summary,
       description: description ?? this.description,
@@ -35,6 +39,7 @@ class AnnouncementModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'title': title,
       'summary': summary,
       'description': description,
@@ -46,6 +51,7 @@ class AnnouncementModel {
 
   factory AnnouncementModel.fromMap(Map<String, dynamic> map) {
     return AnnouncementModel(
+      id: map['id'],
       title: map['title'],
       summary: map['summary'],
       description: map['description'],
@@ -61,7 +67,7 @@ class AnnouncementModel {
 
   @override
   String toString() {
-    return 'AnnouncementModel(title: $title, summary: $summary, description: $description, dateOfPublish: $dateOfPublish, nameOfPublisher: $nameOfPublisher, isLiked: $isLiked)';
+    return 'AnnouncementModel(id: $id, title: $title, summary: $summary, description: $description, dateOfPublish: $dateOfPublish, nameOfPublisher: $nameOfPublisher, isLiked: $isLiked)';
   }
 
   @override
@@ -69,6 +75,7 @@ class AnnouncementModel {
     if (identical(this, other)) return true;
   
     return other is AnnouncementModel &&
+      other.id == id &&
       other.title == title &&
       other.summary == summary &&
       other.description == description &&
@@ -79,7 +86,8 @@ class AnnouncementModel {
 
   @override
   int get hashCode {
-    return title.hashCode ^
+    return id.hashCode ^
+      title.hashCode ^
       summary.hashCode ^
       description.hashCode ^
       dateOfPublish.hashCode ^
