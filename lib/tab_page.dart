@@ -2,6 +2,11 @@
 
 import 'dart:developer';
 
+
+import 'package:collageezy/announcement.dart';
+import 'package:collageezy/homeScreen.dart';
+import 'package:collageezy/liked_page.dart';
+
 import 'package:collageezy/models/user_model.dart';
 
 import 'package:collageezy/profile_menu.dart';
@@ -104,11 +109,11 @@ class _TabPageState extends State<TabPage> {
         bottomNavigationBar: Container(
           decoration: BoxDecoration(color: Colors.white),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 14),
             child: GNav(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               duration: Duration(milliseconds: 800),
-              gap: 8,
+              gap: 5,
               tabs: [
                 GButton(
                   iconActiveColor: Colors.purple,
@@ -120,6 +125,15 @@ class _TabPageState extends State<TabPage> {
                   text: 'Home',
                 ),
                 GButton(
+                  iconActiveColor: Colors.amber[600],
+                  iconColor: Colors.black,
+                  textColor: Colors.amber[600],
+                  backgroundColor: Colors.amber[600]!.withOpacity(.2),
+                  iconSize: 24,
+                  icon: LineIcons.bullhorn,
+                  text: 'Announcements',
+                ),
+                GButton(
                   iconActiveColor: Colors.pink,
                   iconColor: Colors.black,
                   textColor: Colors.pink,
@@ -127,15 +141,6 @@ class _TabPageState extends State<TabPage> {
                   iconSize: 24,
                   icon: LineIcons.heart,
                   text: 'Likes',
-                ),
-                GButton(
-                  iconActiveColor: Colors.amber[600],
-                  iconColor: Colors.black,
-                  textColor: Colors.amber[600],
-                  backgroundColor: Colors.amber[600]!.withOpacity(.2),
-                  iconSize: 24,
-                  icon: LineIcons.search,
-                  text: 'Search',
                 ),
                 GButton(
                   iconActiveColor: Colors.teal,
@@ -157,11 +162,9 @@ class _TabPageState extends State<TabPage> {
           child: selectedIndex != 3
               ? selectedIndex == 0
                   ? HomeScreen()
-                  : AnimatedContainer(
-                      duration: Duration(milliseconds: 800),
-                      color: colors[selectedIndex],
-                      child: Center(child: Text("Hello")),
-                    )
+                  : selectedIndex == 1
+                      ? Announcement()
+                      : LikePage()
               : ProfileMenu(),
         ));
   }
