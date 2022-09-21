@@ -2,6 +2,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:collageezy/utils/branch_and_year.dart';
 import 'package:collageezy/utils/college_list.dart';
 import 'package:collageezy/main.dart';
 import 'package:collageezy/tab_page.dart';
@@ -93,6 +94,8 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
   }
 
   TextEditingController _searchTextEditingController = TextEditingController();
+  TextEditingController yearController = TextEditingController();
+  TextEditingController branchController = TextEditingController();
 
   void onTextFieldTap() {
     DropDownState(
@@ -125,12 +128,12 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
         searchHintText: 'Type..',
         bottomSheetTitle: 'Search',
         searchBackgroundColor: Colors.black12,
-        dataList: collegeList.map((e) => SelectedListItem(false, e)).toList(),
+        dataList: year.map((e) => SelectedListItem(false, e)).toList(),
         selectedItems: (List<dynamic> selectedList) {
           // showSnackBar(selectedList.toString());
         },
         selectedItem: (String selected) {
-          textEditingController.text = selected;
+          yearController.text = selected;
           // showSnackBar(selected);
           // widget.textEditingController.text = selected;
         },
@@ -148,12 +151,12 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
         searchHintText: 'Type..',
         bottomSheetTitle: 'Search',
         searchBackgroundColor: Colors.black12,
-        dataList: collegeList.map((e) => SelectedListItem(false, e)).toList(),
+        dataList: branch.map((e) => SelectedListItem(false, e)).toList(),
         selectedItems: (List<dynamic> selectedList) {
           // showSnackBar(selectedList.toString());
         },
         selectedItem: (String selected) {
-          textEditingController.text = selected;
+          branchController.text = selected;
           // showSnackBar(selected);
           // widget.textEditingController.text = selected;
         },
@@ -205,9 +208,9 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                       .update({
                     // "12Marks": percent12th,
                     // "10Marks": percent10th,
-                    "cYear": cyear,
-                    "cBranch": cbranch,
-                    "nameOfCollege": nameOfClg,
+                    "cYear": yearController.text,
+                    "cBranch": branchController.text,
+                    "nameOfCollege": textEditingController.text,
                     "rollNo": rollNo,
                     "isProfileCompleted": true
                   }).then((value) {
@@ -422,42 +425,56 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                     SizedBox(
                       height: height * .02,
                     ),
-                    TextFormField(
-                      textCapitalization: TextCapitalization.characters,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return "required";
-                        } else {
-                          rollNo = val;
-                          return null;
-                        }
+                    InkWell(
+                      onTap: () {
+                        yearDropDown();
                       },
-                      decoration: const InputDecoration(
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          hintText: 'Year',
-                          labelText: 'Year',
-                          border: OutlineInputBorder()),
-                      obscureText: false,
+                      child: TextFormField(
+                        enabled: false,
+                        controller: yearController,
+                        onTap: () {},
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return "required";
+                          } else {
+                            cyear = val;
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            hintText: 'Year',
+                            labelText: 'Year',
+                            border: OutlineInputBorder()),
+                        obscureText: false,
+                      ),
                     ),
                     SizedBox(
                       height: height * .02,
                     ),
-                    TextFormField(
-                      textCapitalization: TextCapitalization.characters,
-                      validator: (val) {
-                        if (val!.isEmpty) {
-                          return "required";
-                        } else {
-                          rollNo = val;
-                          return null;
-                        }
+                    InkWell(
+                      onTap: () {
+                        branchDropDown();
                       },
-                      decoration: const InputDecoration(
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          hintText: 'Branch',
-                          labelText: 'Branch',
-                          border: OutlineInputBorder()),
-                      obscureText: false,
+                      child: TextFormField(
+                        enabled: false,
+                        controller: branchController,
+                        textCapitalization: TextCapitalization.characters,
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return "required";
+                          } else {
+                            cbranch = val;
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            hintText: 'Branch',
+                            labelText: 'Branch',
+                            border: OutlineInputBorder()),
+                        obscureText: false,
+                      ),
                     ),
                   ],
                 )),
