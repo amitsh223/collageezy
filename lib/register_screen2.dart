@@ -31,6 +31,8 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
   // ignore: non_constant_identifier_names
   XFile? _10thMarksheetImage;
   XFile? _12thMarksheetImage;
+  String? cyear;
+  String? cbranch;
 
   void _showPicker(context, bool is10th) {
     showModalBottomSheet(
@@ -114,29 +116,8 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
       ),
     ).showModal(context);
   }
-    void yearDropDown() {
-    DropDownState(
-      DropDown(
-        submitButtonText: 'Done',
-        submitButtonColor: const Color.fromRGBO(70, 76, 222, 1),
-        searchHintText: 'Type..',
-        bottomSheetTitle: 'Search',
-        searchBackgroundColor: Colors.black12,
-        dataList: collegeList.map((e) => SelectedListItem(false, e)).toList(),
-        selectedItems: (List<dynamic> selectedList) {
-          // showSnackBar(selectedList.toString());
-        },
-        selectedItem: (String selected) {
-          textEditingController.text = selected;
-          // showSnackBar(selected);
-          // widget.textEditingController.text = selected;
-        },
-        enableMultipleSelection: false,
-        searchController: _searchTextEditingController,
-      ),
-    ).showModal(context);
-  }
-    void branchDropDown() {
+
+  void yearDropDown() {
     DropDownState(
       DropDown(
         submitButtonText: 'Done',
@@ -159,6 +140,28 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
     ).showModal(context);
   }
 
+  void branchDropDown() {
+    DropDownState(
+      DropDown(
+        submitButtonText: 'Done',
+        submitButtonColor: const Color.fromRGBO(70, 76, 222, 1),
+        searchHintText: 'Type..',
+        bottomSheetTitle: 'Search',
+        searchBackgroundColor: Colors.black12,
+        dataList: collegeList.map((e) => SelectedListItem(false, e)).toList(),
+        selectedItems: (List<dynamic> selectedList) {
+          // showSnackBar(selectedList.toString());
+        },
+        selectedItem: (String selected) {
+          textEditingController.text = selected;
+          // showSnackBar(selected);
+          // widget.textEditingController.text = selected;
+        },
+        enableMultipleSelection: false,
+        searchController: _searchTextEditingController,
+      ),
+    ).showModal(context);
+  }
 
   String? rollNo;
   bool isLoading = false;
@@ -176,27 +179,25 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: ElevatedButton(
               onPressed: () async {
-                if (_formkey.currentState!.validate() &&
-                    _10thMarksheetImage != null &&
-                    _12thMarksheetImage != null) {
+                if (_formkey.currentState!.validate()) {
                   setState(() {
                     isLoading = true;
                   });
                   final uid = FirebaseAuth.instance.currentUser!.uid;
-                  final ref = FirebaseStorage.instance
-                      .ref()
-                      .child("CustomerDP")
-                      .child(uid)
-                      .child("12Marksheet" ".jpg");
-                  await ref.putFile(File(_12thMarksheetImage!.path));
-                  final image12 = await ref.getDownloadURL();
-                  final ref2 = FirebaseStorage.instance
-                      .ref()
-                      .child("CustomerDP")
-                      .child(uid)
-                      .child("10Marksheet" ".jpg");
-                  await ref2.putFile(File(_10thMarksheetImage!.path));
-                  final image10 = await ref.getDownloadURL();
+                  // final ref = FirebaseStorage.instance
+                  //     .ref()
+                  //     .child("CustomerDP")
+                  //     .child(uid)
+                  //     .child("12Marksheet" ".jpg");
+                  // await ref.putFile(File(_12thMarksheetImage!.path));
+                  // final image12 = await ref.getDownloadURL();
+                  // final ref2 = FirebaseStorage.instance
+                  //     .ref()
+                  //     .child("CustomerDP")
+                  //     .child(uid)
+                  //     .child("10Marksheet" ".jpg");
+                  // await ref2.putFile(File(_10thMarksheetImage!.path));
+                  // final image10 = await ref.getDownloadURL();
                   FirebaseDatabase.instance
                       .ref()
                       .child("User Information")
@@ -204,8 +205,8 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                       .update({
                     // "12Marks": percent12th,
                     // "10Marks": percent10th,
-                    "10Marksheet": image10,
-                    "12MarkSheet": image12,
+                    "cYear": cyear,
+                    "cBranch": cbranch,
                     "nameOfCollege": nameOfClg,
                     "rollNo": rollNo,
                     "isProfileCompleted": true
@@ -223,11 +224,12 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                     });
                     Fluttertoast.showToast(msg: e.toString());
                   });
-                } else if (_formkey.currentState!.validate() &&
-                    (_10thMarksheetImage == null ||
-                        _12thMarksheetImage == null)) {
-                  Fluttertoast.showToast(msg: "Please upload marksheet photos");
                 }
+                //  else if (_formkey.currentState!.validate() &&
+                //     (_10thMarksheetImage == null ||
+                //         _12thMarksheetImage == null)) {
+                //   Fluttertoast.showToast(msg: "Please upload marksheet photos");
+                // }
               },
               style: ButtonStyle(
                   backgroundColor:
