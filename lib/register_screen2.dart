@@ -2,7 +2,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:collageezy/college_list.dart';
+import 'package:collageezy/utils/college_list.dart';
 import 'package:collageezy/main.dart';
 import 'package:collageezy/tab_page.dart';
 import 'package:drop_down_list/drop_down_list.dart';
@@ -25,8 +25,8 @@ class RegisterScreen2 extends StatefulWidget {
 
 class _RegisterScreen2State extends State<RegisterScreen2> {
   final _formkey = GlobalKey<FormState>();
-  String? percent10th;
-  String? percent12th;
+  // String? percent10th;
+  // String? percent12th;
   String? nameOfClg;
   // ignore: non_constant_identifier_names
   XFile? _10thMarksheetImage;
@@ -114,6 +114,51 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
       ),
     ).showModal(context);
   }
+    void yearDropDown() {
+    DropDownState(
+      DropDown(
+        submitButtonText: 'Done',
+        submitButtonColor: const Color.fromRGBO(70, 76, 222, 1),
+        searchHintText: 'Type..',
+        bottomSheetTitle: 'Search',
+        searchBackgroundColor: Colors.black12,
+        dataList: collegeList.map((e) => SelectedListItem(false, e)).toList(),
+        selectedItems: (List<dynamic> selectedList) {
+          // showSnackBar(selectedList.toString());
+        },
+        selectedItem: (String selected) {
+          textEditingController.text = selected;
+          // showSnackBar(selected);
+          // widget.textEditingController.text = selected;
+        },
+        enableMultipleSelection: false,
+        searchController: _searchTextEditingController,
+      ),
+    ).showModal(context);
+  }
+    void branchDropDown() {
+    DropDownState(
+      DropDown(
+        submitButtonText: 'Done',
+        submitButtonColor: const Color.fromRGBO(70, 76, 222, 1),
+        searchHintText: 'Type..',
+        bottomSheetTitle: 'Search',
+        searchBackgroundColor: Colors.black12,
+        dataList: collegeList.map((e) => SelectedListItem(false, e)).toList(),
+        selectedItems: (List<dynamic> selectedList) {
+          // showSnackBar(selectedList.toString());
+        },
+        selectedItem: (String selected) {
+          textEditingController.text = selected;
+          // showSnackBar(selected);
+          // widget.textEditingController.text = selected;
+        },
+        enableMultipleSelection: false,
+        searchController: _searchTextEditingController,
+      ),
+    ).showModal(context);
+  }
+
 
   String? rollNo;
   bool isLoading = false;
@@ -157,8 +202,8 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                       .child("User Information")
                       .child(uid)
                       .update({
-                    "12Marks": percent12th,
-                    "10Marks": percent10th,
+                    // "12Marks": percent12th,
+                    // "10Marks": percent10th,
                     "10Marksheet": image10,
                     "12MarkSheet": image12,
                     "nameOfCollege": nameOfClg,
@@ -202,174 +247,220 @@ class _RegisterScreen2State extends State<RegisterScreen2> {
                       style: TextStyle(fontSize: 18),
                     )),
         ),
-        body: SingleChildScrollView(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Form(
-              key: _formkey,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: height * 0.06,
-                  ),
-                  Text("Upload 10th Marksheet"),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  InkWell(
-                      onTap: () {
-                        _showPicker(context, true);
-                      },
-                      child: _10thMarksheetImage == null
-                          ? Container(
-                              child: Center(
-                                child: Icon(
-                                  Icons.image,
-                                  size: 50,
-                                ),
-                              ),
-                              width: 350,
-                              height: 200,
-                              color: Colors.grey[350],
-                            )
-                          : Image.file(
-                              File(_10thMarksheetImage!.path),
-                              width: 350,
-                              height: 200,
-                              fit: BoxFit.contain,
-                            )),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return 'required';
-                      } else if (double.tryParse(val) == null) {
-                        return "Inavalid value";
-                      } else if (double.tryParse(val) != null &&
-                          double.parse(val) > 100) {
-                        return "can't be greater than 100";
-                      } else {
-                        percent10th = val;
-                        return null;
-                      }
-                    },
-                    decoration: const InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        hintText: '10th Percentage (%)',
-                        labelText: '10th Percentage (%)',
-                        border: OutlineInputBorder()),
-                    obscureText: false,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text("Upload 12th Marksheet"),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      _showPicker(context, false);
-                    },
-                    child: Container(
-                      child: _12thMarksheetImage == null
-                          ? Container(
-                              child: Center(
-                                child: Icon(
-                                  Icons.image,
-                                  size: 50,
-                                ),
-                              ),
-                              width: 350,
-                              height: 200,
-                              color: Colors.grey[350],
-                            )
-                          : Image.file(
-                              File(_12thMarksheetImage!.path),
-                              width: 350,
-                              height: 200,
-                              fit: BoxFit.contain,
-                            ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Form(
+                key: _formkey,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: height * 0.01,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return 'required';
-                      } else if (double.tryParse(val) == null) {
-                        return "Inavalid value";
-                      } else if (double.tryParse(val) != null &&
-                          double.parse(val) > 100) {
-                        return "can't be greater than 100";
-                      } else {
-                        percent12th = val;
-                        return null;
-                      }
-                    },
-                    decoration: const InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        hintText: '12th Percentage (%)',
-                        labelText: '12th Percentage (%)',
-                        border: OutlineInputBorder()),
-                    obscureText: false,
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      onTextFieldTap();
-                    },
-                    child: TextFormField(
-                      enabled: false,
-                      controller: textEditingController,
-                      onTap: () {},
+                    Text('College Details'),
+                    SizedBox(
+                      height: height * 0.05,
+                    ),
+                    // Text("Upload 10th Marksheet"),
+                    // const SizedBox(
+                    //   height: 15,
+                    // ),
+                    // InkWell(
+                    //     onTap: () {
+                    //       _showPicker(context, true);
+                    //     },
+                    //     child: _10thMarksheetImage == null
+                    //         ? Container(
+                    //             child: Center(
+                    //               child: Icon(
+                    //                 Icons.image,
+                    //                 size: 50,
+                    //               ),
+                    //             ),
+                    //             width: 350,
+                    //             height: 200,
+                    //             color: Colors.grey[350],
+                    //           )
+                    //         : Image.file(
+                    //             File(_10thMarksheetImage!.path),
+                    //             width: 350,
+                    //             height: 200,
+                    //             fit: BoxFit.contain,
+                    //           )),
+                    // const SizedBox(
+                    //   height: 15,
+                    // ),
+                    // TextFormField(
+                    //   keyboardType: TextInputType.number,
+                    //   validator: (val) {
+                    //     if (val!.isEmpty) {
+                    //       return 'required';
+                    //     } else if (double.tryParse(val) == null) {
+                    //       return "Inavalid value";
+                    //     } else if (double.tryParse(val) != null &&
+                    //         double.parse(val) > 100) {
+                    //       return "can't be greater than 100";
+                    //     } else {
+                    //       percent10th = val;
+                    //       return null;
+                    //     }
+                    //   },
+                    //   decoration: const InputDecoration(
+                    //       floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    //       hintText: '10th Percentage (%)',
+                    //       labelText: '10th Percentage (%)',
+                    //       border: OutlineInputBorder()),
+                    //   obscureText: false,
+                    // ),
+                    // const SizedBox(
+                    //   height: 15,
+                    // ),
+                    // Text("Upload 12th Marksheet"),
+                    // const SizedBox(
+                    //   height: 15,
+                    // ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     _showPicker(context, false);
+                    //   },
+                    //   child: Container(
+                    //     child: _12thMarksheetImage == null
+                    //         ? Container(
+                    //             child: Center(
+                    //               child: Icon(
+                    //                 Icons.image,
+                    //                 size: 50,
+                    //               ),
+                    //             ),
+                    //             width: 350,
+                    //             height: 200,
+                    //             color: Colors.grey[350],
+                    //           )
+                    //         : Image.file(
+                    //             File(_12thMarksheetImage!.path),
+                    //             width: 350,
+                    //             height: 200,
+                    //             fit: BoxFit.contain,
+                    //           ),
+                    //   ),
+                    // ),
+                    // const SizedBox(
+                    //   height: 15,
+                    // ),
+                    // TextFormField(
+                    //   keyboardType: TextInputType.number,
+                    //   validator: (val) {
+                    //     if (val!.isEmpty) {
+                    //       return 'required';
+                    //     } else if (double.tryParse(val) == null) {
+                    //       return "Inavalid value";
+                    //     } else if (double.tryParse(val) != null &&
+                    //         double.parse(val) > 100) {
+                    //       return "can't be greater than 100";
+                    //     } else {
+                    //       percent12th = val;
+                    //       return null;
+                    //     }
+                    //   },
+                    //   decoration: const InputDecoration(
+                    //       floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    //       hintText: '12th Percentage (%)',
+                    //       labelText: '12th Percentage (%)',
+                    //       border: OutlineInputBorder()),
+                    //   obscureText: false,
+                    // ),
+                    // const SizedBox(
+                    //   height: 15,
+                    // ),
+                    InkWell(
+                      onTap: () {
+                        onTextFieldTap();
+                      },
+                      child: TextFormField(
+                        enabled: false,
+                        controller: textEditingController,
+                        onTap: () {},
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return "required";
+                          } else {
+                            nameOfClg = val;
+                            return null;
+                          }
+                        },
+                        decoration: const InputDecoration(
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            hintText: 'Name of College/Unversity',
+                            labelText: 'Name of College/Unversity',
+                            border: OutlineInputBorder()),
+                        obscureText: false,
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * .02,
+                    ),
+                    TextFormField(
+                      textCapitalization: TextCapitalization.characters,
                       validator: (val) {
                         if (val!.isEmpty) {
                           return "required";
                         } else {
-                          nameOfClg = val;
+                          rollNo = val;
                           return null;
                         }
                       },
                       decoration: const InputDecoration(
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          hintText: 'Name of College/Unversity',
-                          labelText: 'Name of College/Unversity',
+                          hintText: 'Roll no of College/Unversity',
+                          labelText: 'Roll no of College/Unversity',
                           border: OutlineInputBorder()),
                       obscureText: false,
                     ),
-                  ),
-                  SizedBox(
-                    height: height * .02,
-                  ),
-                  TextFormField(
-                    textCapitalization: TextCapitalization.characters,
-                    validator: (val) {
-                      if (val!.isEmpty) {
-                        return "required";
-                      } else {
-                        rollNo = val;
-                        return null;
-                      }
-                    },
-                    decoration: const InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        hintText: 'Roll no of College/Unversity',
-                        labelText: 'Roll no of College/Unversity',
-                        border: OutlineInputBorder()),
-                    obscureText: false,
-                  ),
-                ],
-              )),
-        )),
+                    SizedBox(
+                      height: height * .02,
+                    ),
+                    TextFormField(
+                      textCapitalization: TextCapitalization.characters,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "required";
+                        } else {
+                          rollNo = val;
+                          return null;
+                        }
+                      },
+                      decoration: const InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          hintText: 'Year',
+                          labelText: 'Year',
+                          border: OutlineInputBorder()),
+                      obscureText: false,
+                    ),
+                    SizedBox(
+                      height: height * .02,
+                    ),
+                    TextFormField(
+                      textCapitalization: TextCapitalization.characters,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return "required";
+                        } else {
+                          rollNo = val;
+                          return null;
+                        }
+                      },
+                      decoration: const InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          hintText: 'Branch',
+                          labelText: 'Branch',
+                          border: OutlineInputBorder()),
+                      obscureText: false,
+                    ),
+                  ],
+                )),
+          )),
+        ),
       ),
     );
   }
